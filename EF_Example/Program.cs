@@ -95,9 +95,12 @@ namespace BlogsConsole_BD
                         //Blog.Name = Console.ReadLine();
                         int blogid = 0;
 
-                        var name = Console.ReadLine();
+                        var ID = Console.ReadLine();
                         //var db = new BlogContext();
+                        //var isValid = db.Blogs.Any(b => b.BlogId == Convert.ToInt32(ID));
 
+                        
+                        
 
                         Console.Write("Enter new post title: ");
                         var title = Console.ReadLine();
