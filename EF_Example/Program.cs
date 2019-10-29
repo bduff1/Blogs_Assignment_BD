@@ -11,6 +11,7 @@ namespace BlogsConsole_BD
         public static void Main(string[] args)
         {
             DisplayMenu(true);
+
             string userSelection = Console.ReadLine();
 
             do
@@ -76,31 +77,27 @@ namespace BlogsConsole_BD
                     try
                     {
 
-
                         var db = new BlogContext();
-                        var query = db.Blogs.OrderBy(b => b.Name);
-             
+                        var query = db.Blogs.OrderBy(b => b.BlogId);
 
-                        Console.WriteLine("Each Blog followed by their ID: ");
+                        Console.WriteLine("ID followed by the Blog: ");
                         foreach (var item in query)
                         {
-                            Console.WriteLine(item.Name);
-                            Console.WriteLine(item.BlogId);
-
+                            Console.WriteLine($"{item.BlogId}) {item.Name}");
+                            //Console.WriteLine(item.BlogId);
 
                         }
-                        
 
 
+                        Console.WriteLine();
 
-
-                        Console.WriteLine("Enter the blog ID of the blog you would post to: ");
+                        Console.WriteLine("Enter the ID of the blog you would post to: ");
                         //Blog.Name = Console.ReadLine();
                         int blogid = 0;
 
                         var name = Console.ReadLine();
                         //var db = new BlogContext();
-                        
+
 
                         Console.Write("Enter new post title: ");
                         var title = Console.ReadLine();
@@ -108,19 +105,17 @@ namespace BlogsConsole_BD
                         Console.WriteLine("Enter content: ");
                         var content = Console.ReadLine();
 
-                        var post = new Post { Title = title, Content = content, BlogId = blogid};
+                        var post = new Post { Title = title, Content = content, BlogId = blogid };
 
                         db.AddPost(post);
-
-                       // db.SaveChanges();
+                        logger.Info("Post Created - {title}", title);
+                        // db.SaveChanges();
 
                         //db.AddBlog(blog);
 
 
 
                     }
-
-
 
 
                     catch (Exception ex)
@@ -132,10 +127,43 @@ namespace BlogsConsole_BD
 
                 }
 
-
-
+                // View Blogs
 
                 else if (userSelection == "4")
+                {
+                    //using (var context = new BlogContext())
+                    //{
+                    //    var bquery = context.Blogs
+
+                    //}
+
+
+                    //Console.WriteLine("Which blogs posts would you like to view?");
+                    //var entry = Console.ReadLine();
+
+
+                    //    var query = from st in context.BlogContext
+                    //                where st.StudentName == "Bill"
+                    //                select st;
+
+                    //    var student = query.FirstOrDefault<Student>();
+
+
+                    //string sqlString = "SELECT VALUE st FROM SchoolDBEntities.Students " +
+                    //  "AS st WHERE st.StudentName == 'Bill'";
+
+                    //var objctx = (ctx as IObjectContextAdapter).ObjectContext;
+
+                }
+
+
+
+
+
+
+
+
+                else if (userSelection == "5")
                 {
                     // end the application
                 }
@@ -150,7 +178,7 @@ namespace BlogsConsole_BD
                 userSelection = Console.ReadLine();
 
 
-            } while (userSelection != "4");
+            } while (userSelection != "5");
 
 
             Console.ReadLine();
@@ -164,7 +192,8 @@ namespace BlogsConsole_BD
             Console.WriteLine("1) Display All Blogs");
             Console.WriteLine("2) Add Blog");
             Console.WriteLine("3) Create Post");
-            Console.WriteLine("4) Exit application");
+            Console.WriteLine("4) Display Posts");
+            Console.WriteLine("5) Exit application");
             
         }
     }
