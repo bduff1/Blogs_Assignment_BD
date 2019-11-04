@@ -171,9 +171,7 @@ namespace BlogsConsole_BD
 
                             DisplayPostMenu(true);
 
-                            //Console.WriteLine("Which Blog's posts would you like to view? ");
-                            //    Console.WriteLine();
-                            //    Console.WriteLine("Enter the ID of the Blog: ");
+                        
                                 
                             var blogID = Console.ReadLine();
 
