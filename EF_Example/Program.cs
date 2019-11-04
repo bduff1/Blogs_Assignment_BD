@@ -77,6 +77,7 @@ namespace BlogsConsole_BD
                     try
                     {
 
+
                         var db = new BlogContext();
                         var query = db.Blogs.OrderBy(b => b.BlogId);
 
@@ -93,14 +94,15 @@ namespace BlogsConsole_BD
 
                         Console.WriteLine("Enter the ID of the blog you would post to: ");
                         //Blog.Name = Console.ReadLine();
-                        int blogid = 0;
+                        var blogID = Console.ReadLine();
 
-                        var ID = Console.ReadLine();
+                        //var ID = Console.ReadLine();
                         //var db = new BlogContext();
-                        //var isValid = db.Blogs.Any(b => b.BlogId == Convert.ToInt32(ID));
+                        //var isValid = db.Blogs.Any(b => b.BlogId == Convert.ToInt32(blogID));
+                        //var isValid = db.Blogs.FirstOrDefault(b => b.BlogId == Convert.ToInt32(blogID));
 
-                        
-                        
+
+
 
                         Console.Write("Enter new post title: ");
                         var title = Console.ReadLine();
@@ -108,14 +110,11 @@ namespace BlogsConsole_BD
                         Console.WriteLine("Enter content: ");
                         var content = Console.ReadLine();
 
-                        var post = new Post { Title = title, Content = content, BlogId = blogid };
+                        var post = new Post { Title = title, Content = content, BlogId = Convert.ToInt32(blogID) };
 
                         db.AddPost(post);
                         logger.Info("Post Created - {title}", title);
-                        // db.SaveChanges();
-
-                        //db.AddBlog(blog);
-
+                        db.SaveChanges();
 
 
                     }
@@ -134,37 +133,147 @@ namespace BlogsConsole_BD
 
                 else if (userSelection == "4")
                 {
-                    //using (var context = new BlogContext())
-                    //{
-                    //    var bquery = context.Blogs
-
-                    //}
+                    
+                    DisplaySubMenu(true);
 
 
-                    //Console.WriteLine("Which blogs posts would you like to view?");
-                    //var entry = Console.ReadLine();
+                    //Console.WriteLine("What would you like to do?");
+                    //    Console.WriteLine();
+                    //    Console.WriteLine("A) Display posts from a specific blog");
+                    //    Console.WriteLine("B) Display all posts from all blogs");
+                    //    Console.WriteLine("C) Return to main menu");
+
+                    string subMenuSelection = Console.ReadLine();
+                    
 
 
-                    //    var query = from st in context.BlogContext
-                    //                where st.StudentName == "Bill"
-                    //                select st;
 
-                    //    var student = query.FirstOrDefault<Student>();
+                        do
+                        {
 
 
-                    //string sqlString = "SELECT VALUE st FROM SchoolDBEntities.Students " +
-                    //  "AS st WHERE st.StudentName == 'Bill'";
+                            if (subMenuSelection.ToUpper() == "A")
 
-                    //var objctx = (ctx as IObjectContextAdapter).ObjectContext;
+                            {
 
+
+                                var db = new BlogContext();
+                                var query = db.Blogs.OrderBy(b => b.BlogId);
+
+                                Console.WriteLine("ID followed by the Blog: ");
+                                foreach (var item in query)
+                                {
+                                    Console.WriteLine($"{item.BlogId}) {item.Name}");
+                                    //Console.WriteLine(item.BlogId);
+
+                                }
+                            Console.WriteLine();
+
+                            DisplayPostMenu(true);
+
+                            //Console.WriteLine("Which Blog's posts would you like to view? ");
+                            //    Console.WriteLine();
+                            //    Console.WriteLine("Enter the ID of the Blog: ");
+                                
+                            var blogID = Console.ReadLine();
+
+                            if (blogID == "done")
+                            {
+                                Environment.Exit(0);
+                            }
+
+                            var blogName = from b in db.Blogs.AsEnumerable()
+                                           where (b.BlogId == Convert.ToInt32(blogID))
+                                           select b;
+                            
+                            
+                            //var Pdb = new BlogContext();
+                            //var Pquery = db.Posts.OrderBy(p => p.PostId, blogID = Convert.ToInt32(BlogID));
+                            var postQuery = from p in db.Posts.AsEnumerable()
+                                                join b in db.Blogs.AsEnumerable() on p.BlogId equals b.BlogId
+                                                where (p.BlogId == Convert.ToInt32(blogID))
+                                                select p;
+
+
+
+                            foreach (var titleName in blogName)
+                            {
+                                Console.WriteLine($"Viewing all posts from: {titleName.Name}");
+                            }
+
+
+                            
+
+                                Console.WriteLine();
+                                foreach (var item in postQuery)
+                                {
+                                    Console.WriteLine($"Post ID: {item.PostId})");
+                                    Console.WriteLine($"Title: {item.Title}");
+                                    Console.WriteLine($"Content: {item.Content} \n");
+                                //Console.WriteLine(item.BlogId);
+                                
+
+                                }
+
+                            Console.ReadLine();
+
+                            
+                        }
+
+
+
+                            else if (subMenuSelection.ToUpper() == "B")
+                            {
+                                var db = new BlogContext();
+
+                                var postQuery = from p in db.Posts.AsEnumerable()
+                                                join b in db.Blogs.AsEnumerable() on p.BlogId equals b.BlogId
+                                                select p;
+
+                                Console.WriteLine("All Posts: ");
+                                Console.WriteLine();
+                            foreach (var item in postQuery)
+                            {
+                                Console.WriteLine($"Blog: {item.Blog.Name}");
+                                Console.WriteLine($"Post: {item.PostId}) {item.Title}");
+                                Console.WriteLine($"Content: {item.Content} \n");
+
+                            }
+
+                            
+
+                            Console.ReadLine();
+                            Environment.Exit(0);
+
+
+
+                        }
+
+
+                            else if(subMenuSelection.ToUpper() == "C")
+                            {
+                                
+                                
+                            }
+
+                        else
+                        {
+                            Console.WriteLine("Bad selection, try again.");
+                        }
+
+                    } while (subMenuSelection.ToUpper() != "C");
+
+                    
                 }
+                    
+                
 
 
 
+             
 
 
-
-
+            
 
                 else if (userSelection == "5")
                 {
@@ -191,7 +300,8 @@ namespace BlogsConsole_BD
 
         public static void DisplayMenu(bool firstTime)
         {
-
+            Console.WriteLine("Main Menu");
+            Console.WriteLine();
             Console.WriteLine("1) Display All Blogs");
             Console.WriteLine("2) Add Blog");
             Console.WriteLine("3) Create Post");
@@ -199,5 +309,30 @@ namespace BlogsConsole_BD
             Console.WriteLine("5) Exit application");
             
         }
+
+        public static void DisplaySubMenu(bool firstTime)
+        {
+
+            Console.WriteLine("Post Menu");
+            Console.WriteLine();
+            Console.WriteLine("A) Display posts from a specific blog");
+            Console.WriteLine("B) Display all posts from all blogs");
+            Console.WriteLine("C) Return to main menu");
+
+        }
+
+
+        public static void DisplayPostMenu(bool firstTime)
+        {
+
+            Console.WriteLine("Which Blog's posts would you like to view? ");
+            Console.WriteLine();
+            Console.WriteLine("Enter the ID of the Blog: ");
+            Console.WriteLine("(Enter done to exit)");
+
+
+        }
+
+
     }
 }
